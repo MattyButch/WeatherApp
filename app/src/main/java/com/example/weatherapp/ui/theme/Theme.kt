@@ -20,7 +20,14 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
+
+//    CRT COLOURS!
+    background = CRTGreen,
+    surface = CRTGreen,
+    onBackground = CRTTextGreen,
+    onSurface = CRTTextGreen
+
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -37,7 +44,7 @@ private val LightColorScheme = lightColorScheme(
 fun WeatherAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
