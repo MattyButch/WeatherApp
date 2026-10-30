@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -30,6 +31,7 @@ import com.example.weatherapp.R
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.MainViewModel
 import com.example.weatherapp.ui.theme.BodyFont
 import com.example.weatherapp.ui.theme.CRTGreen
 import com.example.weatherapp.ui.theme.CRTTextGreen
@@ -37,7 +39,10 @@ import com.example.weatherapp.ui.theme.DisplayFont
 
 
 @Composable
-fun WeatherForecast(innerPadding: PaddingValues) {
+
+fun WeatherForecast(viewModel: MainViewModel) {
+
+
     val listWeather = listOf(
         Weather(
             day = "Tuesday",
@@ -84,8 +89,26 @@ fun WeatherForecast(innerPadding: PaddingValues) {
 
     )
     LazyColumn(
-        modifier = Modifier.padding(innerPadding)
+        modifier = Modifier.padding()
     ) {
+        item {
+
+            Text(
+                text = viewModel.message,
+                fontFamily = BodyFont
+            )
+
+            Button(
+                onClick = {
+                    viewModel.updateMessage("Changed from Forecast")
+                }
+            ) {
+                Text("Change Message")
+            }
+
+            HorizontalDivider()
+        }
+
         items(listWeather) { weather ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,

@@ -23,6 +23,8 @@ class MainActivity : ComponentActivity() {
             WeatherAppTheme {
                 Navigation()
             }
+
+
         }
     }
 }

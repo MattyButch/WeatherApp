@@ -52,6 +52,11 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+// Retrofit GSON Converter
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

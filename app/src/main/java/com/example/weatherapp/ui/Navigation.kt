@@ -39,6 +39,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherapp.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +48,10 @@ fun Navigation() {
 
     val navController = rememberNavController()
     var selectedIndex by remember {mutableIntStateOf(0)}
+
+    //Intilizite view model in one place (shared view model), and pass it into different screens
+    val viewModel: MainViewModel = viewModel()
+
 
     Scaffold(
         topBar = {
@@ -120,11 +126,10 @@ fun Navigation() {
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = "CurrentWeather"){
-                CurrentWeather()
+                CurrentWeather(viewModel)
             }
             composable(route = "WeatherForecast"){
-                WeatherForecast(innerPadding
-                )
+                WeatherForecast(viewModel)
             }
         }
     }
