@@ -57,6 +57,18 @@ dependencies {
 // Retrofit GSON Converter
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
 
+    // Coil (use v3.4.0 for Kotlin compatibility)
+    implementation("io.coil-kt.coil3:coil-compose:3.4.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
+
+    // need this for ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+
+    // need this for Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    // Location services
+    implementation("com.google.android.gms:play-services-location:21.4.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

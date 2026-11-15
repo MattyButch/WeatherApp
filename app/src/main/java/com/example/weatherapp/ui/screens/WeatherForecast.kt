@@ -36,117 +36,87 @@ import com.example.weatherapp.ui.theme.BodyFont
 import com.example.weatherapp.ui.theme.CRTGreen
 import com.example.weatherapp.ui.theme.CRTTextGreen
 import com.example.weatherapp.ui.theme.DisplayFont
+import com.example.weatherapp.weathericons.WeatherIconMapper
+import com.example.weatherapp.weathericons.toDrawable
 
 
 @Composable
 
 fun WeatherForecast(viewModel: MainViewModel) {
+    val weather = viewModel.weather
 
+    weather?.let { currentWeather ->
+        val listWeather = currentWeather.forecast.forecastday.map { forecastDay ->
 
-    val listWeather = listOf(
-        Weather(
-            day = "Tuesday",
-            name = "Sunny",
-            temp = 16,
-            resourceId = R.drawable.mcgsunsprite1
-        ),
-        Weather(
-            day = "Wednesday",
-            name = "Rainy",
-            temp = 11,
-            resourceId = R.drawable.mcgrainysprite
-        ),
-        Weather(
-            day = "Thursday",
-            name = "Cloudy",
-            temp = 11,
-            resourceId = R.drawable.mcgcloudsprite2
-        ),
-        Weather(
-            day = "Friday",
-            name = "Snowy",
-            temp = -10,
-            resourceId = R.drawable.mcgsnowysprite
-        ),
-        Weather(
-            day = "Saturday",
-            name = "Cloudy",
-            temp = 5,
-            resourceId = R.drawable.mcgcloudsprite2
-        ),
-        Weather(
-            day = "Sunday",
-            name = "Sunny",
-            temp = 5,
-            resourceId = R.drawable.mcgsunsprite1
-        ),
-        Weather(
-            day = "Monday",
-            name = "Thunderstorm",
-            temp = 5,
-            resourceId = R.drawable.mcglightning
-        ),
-
-    )
-    LazyColumn(
-        modifier = Modifier.padding()
-    ) {
-        item {
-
-            Text(
-                text = viewModel.message,
-                fontFamily = BodyFont
+            Weather(
+                day = forecastDay.date,
+                name = forecastDay.day.condition.text,
+                temp = forecastDay.day.maxtemp_c.toInt(),
+                resourceId = WeatherIconMapper.getIcon(
+                    forecastDay.day.condition.code,
+                    1
+                ).toDrawable()
             )
 
-            Button(
-                onClick = {
-                    viewModel.updateMessage("Changed from Forecast")
-                }
-            ) {
-                Text("Change Message")
-            }
-
-            HorizontalDivider()
         }
 
-        items(listWeather) { weather ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(
-                    horizontal = 16.dp,
-                    vertical = 20.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = weather.resourceId),
-                    contentDescription = weather.name
-                )
-                Spacer(
-                    modifier = Modifier.width(24.dp)
-                )
-                Column(
-                    modifier = Modifier.weight(1f)
+
+        LazyColumn(
+            modifier = Modifier.padding()
+        ) {
+
+            items(listWeather) { weather ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp,
+                        vertical = 20.dp
+                    )
                 ) {
-                    Text(
-                        text = weather.day,
-                        fontFamily = DisplayFont,
-                        fontSize = 18.sp,
-                        style = TextStyle(
-                            shadow = Shadow(
-                                color = CRTTextGreen,
-                                offset = Offset(0f, 0f),
-                                blurRadius = 7f
+                    Image(
+                        painter = painterResource(id = weather.resourceId),
+                        contentDescription = weather.name
+                    )
+                    Spacer(
+                        modifier = Modifier.width(24.dp)
+                    )
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = weather.day,
+                            fontFamily = DisplayFont,
+                            fontSize = 18.sp,
+                            style = TextStyle(
+                                shadow = Shadow(
+                                    color = CRTTextGreen,
+                                    offset = Offset(0f, 0f),
+                                    blurRadius = 7f
+                                )
                             )
                         )
-                    )
 
 
-                    Spacer(
-                        modifier = Modifier.height(8.dp)
-                    )
+                        Spacer(
+                            modifier = Modifier.height(8.dp)
+                        )
 
+                        Text(
+                            text = weather.name,
+                            fontFamily = BodyFont,
+                            fontSize = 16.sp,
+                            style = TextStyle(
+                                shadow = Shadow(
+                                    color = CRTTextGreen,
+                                    offset = Offset(0f, 0f),
+                                    blurRadius = 7f
+                                )
+                            )
+                        )
+                    }
                     Text(
-                        text = weather.name,
-                        fontFamily = BodyFont,
+                        text = "${weather.temp}°",
+                        fontFamily = DisplayFont,
                         fontSize = 16.sp,
                         style = TextStyle(
                             shadow = Shadow(
@@ -157,24 +127,12 @@ fun WeatherForecast(viewModel: MainViewModel) {
                         )
                     )
                 }
-                Text(
-                    text = "${weather.temp}°",
-                    fontFamily = DisplayFont,
-                    fontSize = 16.sp,
-                    style = TextStyle(
-                        shadow = Shadow(
-                            color = CRTTextGreen,
-                            offset = Offset(0f, 0f),
-                            blurRadius = 7f
-                        )
-                    )
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = CRTTextGreen
                 )
             }
-
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = CRTTextGreen
-            )
         }
     }
 }

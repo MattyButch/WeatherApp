@@ -1,8 +1,12 @@
 package com.example.weatherapp.ui
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Thermostat
@@ -35,12 +39,14 @@ import com.example.weatherapp.ui.theme.NavDisplayFont
 import com.example.weatherapp.ui.theme.CRTAmber
 import com.example.weatherapp.ui.theme.CRTDarkGrey
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.runtime.LaunchedEffect
 //Imports to make it glow
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.MainViewModel
+import com.example.weatherapp.ui.screens.CurrentAstro
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,6 +57,26 @@ fun Navigation() {
 
     //Intilizite view model in one place (shared view model), and pass it into different screens
     val viewModel: MainViewModel = viewModel()
+    // Begin: Ask permission to get device location.
+        // Note: If permission is previously granted, the dialog won't appear and refreshLocation() will get called.
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        if (results.values.any { it }) {
+            viewModel.refreshLocation() // call a function to get the current location for device
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        launcher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        )
+        }
+        // End: Ask permission to get device location.
+
 
 
     Scaffold(
@@ -63,13 +89,26 @@ fun Navigation() {
                 title = {
                     if (selectedIndex == 0){
                         Text(
-                            text = "Halifax, NS",
+                            text = viewModel.weather?.let {
+                                "${it.location.name}, ${it.location.region}"
+                            } ?: "Loading...",
                             fontFamily = NavDisplayFont,
                             color = IBMRed
                         )
                     }
                     else if(selectedIndex == 1){
-                        Text(text = "Halifax, NS",
+                        Text(
+                            text = viewModel.weather?.let {
+                                "${it.location.name}, ${it.location.region}"
+                            } ?: "Loading...",
+                            fontFamily = NavDisplayFont,
+                            color = IBMRed)
+                    }
+                    else if(selectedIndex == 2){
+                        Text(
+                            text = viewModel.weather?.let {
+                                "${it.location.name}, ${it.location.region}"
+                            } ?: "Loading...",
                             fontFamily = NavDisplayFont,
                             color = IBMRed)
                     }
@@ -115,6 +154,28 @@ fun Navigation() {
                         }
                     }
                 )
+
+                //Astro
+                NavigationBarItem(
+                    icon = { Icon(imageVector = Icons.Default.DarkMode,contentDescription = "Astro")},
+                    label = {Text("Astro") },
+                    selected = selectedIndex == 2,
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = CRTDarkGrey
+                    ),
+                    onClick = {
+                        selectedIndex = 2
+
+                        navController.navigate(route = "Astro") {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+
             }
         }
     ) //End Scaffold
@@ -130,6 +191,9 @@ fun Navigation() {
             }
             composable(route = "WeatherForecast"){
                 WeatherForecast(viewModel)
+            }
+            composable(route = "Astro") {
+                CurrentAstro(viewModel)
             }
         }
     }
